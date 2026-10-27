@@ -1,0 +1,85 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.build/
+.buildlog/
+.history
+.svn/
+.swiftpm/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launched configurations and tasks you actually want to
+# potentially check in. But there are some things you should always ignore:
+.vscode/bin/
+.vscode/appRoot/
+.vscode/obj/
+.vscode/launch.json
+.vscode/extensions.json
+.vscode/dist/
+.vscode/out/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+
+# Android related
+**/android/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/.gradle
+**/android/gradlew
+**/android/gradlew.bat
+
+# iOS/macOS related
+**/ios/Flutter/Generated.xcconfig
+**/ios/Flutter/flutter_export_environment.sh
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+**/ios/DerivedData/
+**/ios/Pods/
+**/ios/.generated/
+**/ios/Podfile.lock
+**/ios/Runner.xcworkspace/xcshareddata/
+**/macos/Flutter/ephemeral/
+**/macos/DerivedData/
+**/macos/Pods/
+**/macos/.generated/
+**/macos/Podfile.lock
+**/macos/Runner.xcworkspace/xcshareddata/
+
+# Symbol lookup publications
+*.full.symbols
+
+# Linux related
+**/linux/flutter/ephemeral/
+
+# Windows related
+**/windows/flutter/ephemeral/
+
+# Executable programs and shared libraries
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Generated environment files
+lib/helper/environment/environment.g.dart
+# Widget Preview related
+.widget_preview/
