@@ -38,13 +38,18 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 /build/
+**/build/
+**/node_modules/
+udaya_visitor_api/.env
 
 # Android related
 **/android/local.properties
 **/android/**/GeneratedPluginRegistrant.java
 **/android/.gradle
+**/android/build/
 **/android/gradlew
 **/android/gradlew.bat
+*.dex
 
 # iOS/macOS related
 **/ios/Flutter/Generated.xcconfig

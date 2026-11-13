@@ -39,11 +39,13 @@ class AppColors {
   static const Color textBodyDark = Color(0xFFE8E9F5);
   static const Color textSubDark = Color(0xFF9EA2C0);
 
-  static Color getGlassBase(bool isDark) =>
-      isDark ? surfaceDark.withValues(alpha: 0.7) : Colors.white.withValues(alpha: 0.7);
+  static Color getGlassBase(bool isDark) => isDark
+      ? surfaceDark.withValues(alpha: 0.7)
+      : Colors.white.withValues(alpha: 0.7);
 
-  static Color getGlassBorder(bool isDark) =>
-      isDark ? Colors.white.withValues(alpha: 0.2) : Colors.black.withValues(alpha: 0.1);
+  static Color getGlassBorder(bool isDark) => isDark
+      ? Colors.white.withValues(alpha: 0.2)
+      : Colors.black.withValues(alpha: 0.1);
 }
 
 /// Soft lavender -> deep navy background used by every page.
@@ -58,56 +60,58 @@ class AppTheme {
   static const _font = 'Inter';
 
   static ThemeData lightTheme(Color primaryColor) => ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-      brightness: Brightness.light,
-      surface: AppColors.surface,
-      primary: primaryColor,
-    ),
-    scaffoldBackgroundColor: AppColors.background,
-    fontFamily: _font,
-    useMaterial3: true,
-    dividerColor: AppColors.border,
-    filledButtonTheme: FilledButtonThemeData(
-      style: FilledButton.styleFrom(
-        minimumSize: const Size(0, 48),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    ),
-    outlinedButtonTheme: OutlinedButtonThemeData(
-      style: OutlinedButton.styleFrom(
-        minimumSize: const Size(0, 48),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-    ),
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.background,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
-      iconTheme: IconThemeData(color: AppColors.textBody),
-    ),
-  );
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.light,
+          surface: AppColors.surface,
+          primary: primaryColor,
+        ),
+        scaffoldBackgroundColor: AppColors.background,
+        fontFamily: _font,
+        useMaterial3: true,
+        dividerColor: AppColors.border,
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            minimumSize: const Size(0, 48),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        outlinedButtonTheme: OutlinedButtonThemeData(
+          style: OutlinedButton.styleFrom(
+            minimumSize: const Size(0, 48),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          ),
+        ),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.background,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+          iconTheme: IconThemeData(color: AppColors.textBody),
+        ),
+      );
 
   static ThemeData darkTheme(Color primaryColor) => ThemeData(
-    colorScheme: ColorScheme.fromSeed(
-      seedColor: primaryColor,
-      brightness: Brightness.dark,
-      surface: AppColors.surfaceDark,
-      primary: primaryColor,
-    ),
-    scaffoldBackgroundColor: AppColors.backgroundDark,
-    fontFamily: _font,
-    useMaterial3: true,
-    dividerColor: AppColors.hairlineDark,
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.backgroundDark,
-      elevation: 0,
-      scrolledUnderElevation: 0,
-      centerTitle: false,
-      iconTheme: IconThemeData(color: AppColors.steel),
-    ),
-  );
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: primaryColor,
+          brightness: Brightness.dark,
+          surface: AppColors.surfaceDark,
+          primary: primaryColor,
+        ),
+        scaffoldBackgroundColor: AppColors.backgroundDark,
+        fontFamily: _font,
+        useMaterial3: true,
+        dividerColor: AppColors.hairlineDark,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.backgroundDark,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+          iconTheme: IconThemeData(color: AppColors.steel),
+        ),
+      );
 
   static ThemeData get theme => lightTheme(AppColors.primary);
 }

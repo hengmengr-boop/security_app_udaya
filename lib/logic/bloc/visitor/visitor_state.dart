@@ -4,6 +4,11 @@ sealed class VisitorState {}
 
 final class VisitorInitial extends VisitorState {}
 
+final class VisitorLoadFailure extends VisitorState {
+  VisitorLoadFailure(this.message);
+  final String message;
+}
+
 final class VisitorLoadedState extends VisitorState {
   VisitorLoadedState({
     required this.all,
@@ -36,7 +41,9 @@ final class VisitorLoadedState extends VisitorState {
       if (room != null && v.room != room) return false;
       if (todayOnly) {
         final d = v.startTime;
-        if (d.year != now.year || d.month != now.month || d.day != now.day) return false;
+        if (d.year != now.year || d.month != now.month || d.day != now.day) {
+          return false;
+        }
       }
       return true;
     }).toList();

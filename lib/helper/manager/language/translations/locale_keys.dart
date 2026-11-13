@@ -1,4 +1,6 @@
 // Translation keys used by the application.
+// ignore_for_file: constant_identifier_names
+
 abstract final class LocaleKeys {
   static const app_name = 'app_name';
   static const welcome = 'welcome';
@@ -35,4 +37,18 @@ abstract final class LocaleKeys {
   static const filter_apply = 'filter_apply';
   static const msg_checked_in = 'msg_checked_in';
   static const msg_checked_out = 'msg_checked_out';
+  static const error_network = 'error_network';
+  static const error_timeout = 'error_timeout';
+  static const error_unauthorized = 'error_unauthorized';
+  static const error_server = 'error_server';
+  static const retry = 'retry';
+  static const badge_total = 'badge_total';
+  static const public_checkin = 'public_checkin';
+  static const verify_pin = 'verify_pin';
+  static const enter_pin = 'enter_pin';
+  static const pin_invalid = 'pin_invalid';
+  static const report_title = 'report_title';
+  static const export_report = 'export_report';
+  static const facility_linked = 'facility_linked';
+  static const loading = 'loading';
 }

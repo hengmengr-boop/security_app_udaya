@@ -31,5 +31,6 @@ final class _ProgressDialog extends StatelessWidget {
   const _ProgressDialog();
 
   @override
-  Widget build(BuildContext context) => const PopScope(canPop: true, child: ProgressBar());
+  Widget build(BuildContext context) =>
+      const PopScope(canPop: true, child: ProgressBar());
 }

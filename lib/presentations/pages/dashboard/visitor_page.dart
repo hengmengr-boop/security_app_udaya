@@ -20,6 +20,14 @@ final class _VisitorPageState extends State<VisitorPage> {
   final _debouncer = Debouncer();
 
   @override
+  void initState() {
+    super.initState();
+    context.read<VisitorBloc>().add(LoadVisitorsEvent());
+    context.read<VisitorListBloc>().add(const FetchVisitorListEvent());
+    context.read<VisitorBadgeBloc>().add(const FetchVisitorBadgeEvent());
+  }
+
+  @override
   void dispose() {
     _searchController.dispose();
     _debouncer.dispose();
@@ -30,8 +38,12 @@ final class _VisitorPageState extends State<VisitorPage> {
 
   void _onSearchChanged(String value) {
     _debouncer.run(() {
-      if (mounted)
+      if (mounted) {
         context.read<VisitorBloc>().add(SearchVisitorEvent(query: value));
+        context.read<VisitorListBloc>().add(FetchVisitorListEvent(
+              filter: VisitorListFilterRequest(search: value),
+            ));
+      }
     });
   }
 
@@ -46,6 +58,13 @@ final class _VisitorPageState extends State<VisitorPage> {
     context
         .read<VisitorBloc>()
         .add(ApplyFilterEvent(room: result.room, todayOnly: result.todayOnly));
+
+    context.read<VisitorListBloc>().add(FetchVisitorListEvent(
+          filter: VisitorListFilterRequest(
+            roomId: result.room,
+            search: _searchController.text.trim(),
+          ),
+        ));
   }
 
   Future<void> _logout() async {
@@ -60,15 +79,11 @@ final class _VisitorPageState extends State<VisitorPage> {
   }
 
   void _checkIn(VisitorModel v) {
-    context.read<VisitorBloc>().add(CheckInEvent(id: v.id));
-    context.showSuccessSnackBar(
-        msg: tr(LocaleKeys.msg_checked_in, namedArgs: {'name': v.name}));
+    context.read<VisitorActionBloc>().add(CheckInActionEvent(v.id));
   }
 
   void _checkOut(VisitorModel v) {
-    context.read<VisitorBloc>().add(CheckOutEvent(id: v.id));
-    context.showSuccessSnackBar(
-        msg: tr(LocaleKeys.msg_checked_out, namedArgs: {'name': v.name}));
+    context.read<VisitorActionBloc>().add(CheckOutActionEvent(v.id));
   }
 
   String _tabLabel(VisitorStatus status) => switch (status) {
@@ -78,10 +93,11 @@ final class _VisitorPageState extends State<VisitorPage> {
       };
 
   Future<void> _openAddVisitor() async {
-    await Navigator.of(context).push(
-        MaterialPageRoute(builder: (_) => const AddVisitorPage()));
+    await Navigator.of(context)
+        .push(MaterialPageRoute(builder: (_) => const AddVisitorPage()));
     if (!mounted) return;
     context.read<VisitorBloc>().add(LoadVisitorsEvent());
+    context.read<VisitorListBloc>().add(const RefreshVisitorListEvent());
   }
 
   // ── Build ─────────────────────────────────────────────────────────────────
@@ -89,10 +105,39 @@ final class _VisitorPageState extends State<VisitorPage> {
   @override
   Widget build(BuildContext context) {
     final mobile = context.isMobile;
-    return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
-        if (state is AuthLoggedOut) context.go(destination: const LoginPage());
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AuthBloc, AuthState>(
+          listener: (context, state) {
+            if (state is AuthLoggedOut) {
+              context.go(destination: const LoginPage());
+            }
+          },
+        ),
+        BlocListener<VisitorActionBloc, VisitorActionState>(
+          listener: (context, state) {
+            if (state is VisitorActionSuccess) {
+              context.read<VisitorBloc>().add(LoadVisitorsEvent());
+              context
+                  .read<VisitorBadgeBloc>()
+                  .add(const FetchVisitorBadgeEvent());
+              final visitor = state.visitor;
+              final message = visitor != null &&
+                      state.message.toLowerCase().contains('checked in')
+                  ? tr(LocaleKeys.msg_checked_in,
+                      namedArgs: {'name': visitor.name})
+                  : visitor != null &&
+                          state.message.toLowerCase().contains('checked out')
+                      ? tr(LocaleKeys.msg_checked_out,
+                          namedArgs: {'name': visitor.name})
+                      : state.message;
+              context.showSuccessSnackBar(msg: message);
+            } else if (state is VisitorActionFailure) {
+              context.showSuccessSnackBar(msg: state.error, isError: true);
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: Container(
           decoration: const BoxDecoration(gradient: kBrandGradient),
@@ -113,8 +158,26 @@ final class _VisitorPageState extends State<VisitorPage> {
                 ),
                 child: BlocBuilder<VisitorBloc, VisitorState>(
                   builder: (context, state) {
-                    if (state is! VisitorLoadedState)
+                    if (state is VisitorLoadFailure) {
+                      return Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('Could not load visitors: ${state.message}'),
+                            const SizedBox(height: 12),
+                            FilledButton(
+                              onPressed: () => context
+                                  .read<VisitorBloc>()
+                                  .add(LoadVisitorsEvent()),
+                              child: const Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    }
+                    if (state is! VisitorLoadedState) {
                       return const ProgressBar();
+                    }
                     return context.isWide
                         ? _buildWide(context, state)
                         : _buildNarrow(context, state);
@@ -150,9 +213,18 @@ final class _VisitorPageState extends State<VisitorPage> {
                         label: _tabLabel(tab),
                         selected: state.tab == tab,
                         fontSize: 28,
-                        onTap: () => context
-                            .read<VisitorBloc>()
-                            .add(ChangeTabEvent(tab: tab)),
+                        onTap: () {
+                          context
+                              .read<VisitorBloc>()
+                              .add(ChangeTabEvent(tab: tab));
+                          context.read<VisitorListBloc>().add(
+                                FetchVisitorListEvent(
+                                  filter: VisitorListFilterRequest(
+                                    status: tab.name,
+                                  ),
+                                ),
+                              );
+                        },
                       ),
                     ),
                     const SizedBox(height: 14),
@@ -221,9 +293,18 @@ final class _VisitorPageState extends State<VisitorPage> {
                           label: _tabLabel(tabs[i]),
                           selected: state.tab == tabs[i],
                           fontSize: 14,
-                          onTap: () => context
-                              .read<VisitorBloc>()
-                              .add(ChangeTabEvent(tab: tabs[i])),
+                          onTap: () {
+                            context
+                                .read<VisitorBloc>()
+                                .add(ChangeTabEvent(tab: tabs[i]));
+                            context.read<VisitorListBloc>().add(
+                                  FetchVisitorListEvent(
+                                    filter: VisitorListFilterRequest(
+                                      status: tabs[i].name,
+                                    ),
+                                  ),
+                                );
+                          },
                         ),
                       ),
                     ),
@@ -288,22 +369,45 @@ final class _VisitorPageState extends State<VisitorPage> {
 
   Widget _buildList(BuildContext context, VisitorLoadedState state) {
     final visible = state.visible;
-    if (visible.isEmpty) return const _EmptyState();
-    return ListView.separated(
-      padding: EdgeInsets.zero,
-      itemCount: visible.length,
-      separatorBuilder: (context, index) => const SizedBox(height: 16),
-      itemBuilder: (context, index) {
-        final v = visible[index];
-        return ItemVisitor(
-          visitor: v,
-          onShowQr: () => showQrCodeDialog(context, v),
-          onCheckIn:
-              v.status == VisitorStatus.upcoming ? () => _checkIn(v) : null,
-          onCheckOut:
-              v.status == VisitorStatus.onSite ? () => _checkOut(v) : null,
+    final actionState = context.watch<VisitorActionBloc>().state;
+    final activeVisitorId = actionState is VisitorActionLoading
+        ? actionState.activeVisitorId
+        : null;
+    return RefreshIndicator(
+      onRefresh: () async {
+        final visitorBloc = context.read<VisitorBloc>();
+        visitorBloc.add(LoadVisitorsEvent());
+        context.read<VisitorListBloc>().add(const RefreshVisitorListEvent());
+        context.read<VisitorBadgeBloc>().add(const FetchVisitorBadgeEvent());
+        await visitorBloc.stream.firstWhere(
+          (next) => next is VisitorLoadedState || next is VisitorLoadFailure,
         );
       },
+      child: visible.isEmpty
+          ? ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: const [SizedBox(height: 240, child: _EmptyState())],
+            )
+          : ListView.separated(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.zero,
+              itemCount: visible.length,
+              separatorBuilder: (context, index) => const SizedBox(height: 16),
+              itemBuilder: (context, index) {
+                final v = visible[index];
+                return ItemVisitor(
+                  visitor: v,
+                  onShowQr: () => showQrCodeDialog(context, v),
+                  actionLoading: activeVisitorId == v.id,
+                  onCheckIn: v.status == VisitorStatus.upcoming
+                      ? () => _checkIn(v)
+                      : null,
+                  onCheckOut: v.status == VisitorStatus.onSite
+                      ? () => _checkOut(v)
+                      : null,
+                );
+              },
+            ),
     );
   }
 }

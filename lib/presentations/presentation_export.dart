@@ -1,5 +1,5 @@
 // * Items
-export 'items/item_visitor_figma.dart';
+export 'items/item_visitor.dart';
 
 // * Modals
 export 'modals/bottom_sheet/filter_bottom_sheet.dart';

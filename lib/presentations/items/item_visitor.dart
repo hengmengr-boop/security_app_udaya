@@ -5,18 +5,33 @@ import 'package:udaya_visitor/helper/helper_export.dart';
 
 /// One visitor card: avatar, name, schedule, purpose and the status actions.
 final class ItemVisitor extends StatelessWidget {
-  const ItemVisitor({super.key, required this.visitor, this.onShowQr, this.onCheckIn, this.onCheckOut});
+  const ItemVisitor(
+      {super.key,
+      required this.visitor,
+      this.onShowQr,
+      this.onCheckIn,
+      this.onCheckOut,
+      this.actionLoading = false});
 
   final VisitorModel visitor;
   final VoidCallback? onShowQr;
   final VoidCallback? onCheckIn;
   final VoidCallback? onCheckOut;
+  final bool actionLoading;
 
-  String _fmt(String pattern, DateTime date, String lang) {
+  String _fmtDate(DateTime date, String lang) {
     try {
-      return DateFormat(pattern, lang).format(date);
+      return DateFormat('MMM d', lang).format(date);
     } catch (_) {
-      return DateFormat(pattern).format(date);
+      return DateFormat('MMM d').format(date);
+    }
+  }
+
+  String _fmtTime(DateTime date) {
+    try {
+      return DateFormat('hh:mm a', 'en').format(date);
+    } catch (_) {
+      return DateFormat('hh:mm a').format(date);
     }
   }
 
@@ -24,8 +39,9 @@ final class ItemVisitor extends StatelessWidget {
   Widget build(BuildContext context) {
     final lang = context.locale.languageCode;
     final compact = context.isMobile;
-    final date = _fmt('MMM d', visitor.startTime, lang);
-    final time = '${_fmt('hh:mm a', visitor.startTime, lang)} - ${_fmt('hh:mm a', visitor.endTime, lang)}';
+    final date = _fmtDate(visitor.startTime, lang);
+    final time =
+        '${_fmtTime(visitor.startTime)} - ${_fmtTime(visitor.endTime)}';
     final avatar = compact ? 56.0 : 72.0;
 
     return Container(
@@ -45,7 +61,9 @@ final class ItemVisitor extends StatelessWidget {
                 width: avatar,
                 height: avatar,
                 alignment: Alignment.center,
-                decoration: BoxDecoration(color: AppColors.avatarBg, borderRadius: BorderRadius.circular(14)),
+                decoration: BoxDecoration(
+                    color: AppColors.avatarBg,
+                    borderRadius: BorderRadius.circular(14)),
                 child: Text(
                   visitor.initials,
                   style: TextStyle(
@@ -72,12 +90,16 @@ final class ItemVisitor extends StatelessWidget {
                     ),
                     const SizedBox(height: 6),
                     Wrap(
-                      spacing: 22,
+                      spacing: 16,
                       runSpacing: 6,
                       children: [
                         _Info(icon: Icons.calendar_today_outlined, text: date),
                         _Info(icon: Icons.schedule, text: time),
-                        _Info(icon: Icons.meeting_room_outlined, text: '${tr(LocaleKeys.room)} ${visitor.room}'),
+                        if (visitor.room.trim().isNotEmpty)
+                          _Info(
+                              icon: Icons.meeting_room_outlined,
+                              text:
+                                  '${tr(LocaleKeys.room)} ${visitor.room.trim()}'),
                       ],
                     ),
                   ],
@@ -105,7 +127,9 @@ final class ItemVisitor extends StatelessWidget {
         ),
         const SizedBox(width: 8),
         Expanded(
-          child: Text(visitor.purpose, style: const TextStyle(fontSize: 16, color: AppColors.textSub, height: 1.3)),
+          child: Text(visitor.purpose,
+              style: const TextStyle(
+                  fontSize: 16, color: AppColors.textSub, height: 1.3)),
         ),
       ],
     );
@@ -119,31 +143,54 @@ final class ItemVisitor extends StatelessWidget {
           onTap: onShowQr!,
         ),
       if (visitor.status == VisitorStatus.upcoming && onCheckIn != null)
-        _ActionButton(icon: null, label: tr(LocaleKeys.check_in), color: Colors.black, onTap: onCheckIn!),
+        _ActionButton(
+            icon: null,
+            label: tr(LocaleKeys.check_in),
+            color: Colors.black,
+            onTap: onCheckIn!,
+            loading: actionLoading),
       if (visitor.status == VisitorStatus.onSite && onCheckOut != null)
-        _ActionButton(icon: null, label: tr(LocaleKeys.check_out), color: AppColors.accent, onTap: onCheckOut!),
-      if (visitor.status == VisitorStatus.checkedOut && visitor.checkOutAt != null)
+        _ActionButton(
+            icon: null,
+            label: tr(LocaleKeys.check_out),
+            color: AppColors.accent,
+            onTap: onCheckOut!,
+            loading: actionLoading),
+      if (visitor.status == VisitorStatus.checkedOut &&
+          visitor.checkOutAt != null)
         _Info(
           icon: Icons.logout,
-          text: tr(LocaleKeys.checked_out_at, namedArgs: {'time': _fmt('hh:mm a', visitor.checkOutAt!, lang)}),
+          text: tr(LocaleKeys.checked_out_at,
+              namedArgs: {'time': _fmtTime(visitor.checkOutAt!)}),
         ),
     ];
 
     return LayoutBuilder(
       builder: (context, c) {
-        final buttons = Wrap(spacing: 12, runSpacing: 8, alignment: WrapAlignment.end, children: actions);
+        final buttons = Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            alignment: WrapAlignment.end,
+            children: actions);
         if (c.maxWidth < 560) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               purpose,
-              if (actions.isNotEmpty) ...[const SizedBox(height: 12), Align(alignment: Alignment.centerRight, child: buttons)],
+              if (actions.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                Align(alignment: Alignment.centerRight, child: buttons)
+              ],
             ],
           );
         }
         return Row(
           crossAxisAlignment: CrossAxisAlignment.center,
-          children: [Expanded(child: purpose), const SizedBox(width: 16), buttons],
+          children: [
+            Expanded(child: purpose),
+            const SizedBox(width: 16),
+            buttons
+          ],
         );
       },
     );
@@ -163,19 +210,32 @@ final class _Info extends StatelessWidget {
       children: [
         Icon(icon, size: 20, color: AppColors.textSub),
         const SizedBox(width: 8),
-        Text(text, style: const TextStyle(fontSize: 16, color: AppColors.textSub)),
+        Flexible(
+          child: Text(
+            text,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 16, color: AppColors.textSub),
+          ),
+        ),
       ],
     );
   }
 }
 
 final class _ActionButton extends StatelessWidget {
-  const _ActionButton({required this.icon, required this.label, required this.color, required this.onTap});
+  const _ActionButton(
+      {required this.icon,
+      required this.label,
+      required this.color,
+      required this.onTap,
+      this.loading = false});
 
   final IconData? icon;
   final String label;
   final Color color;
   final VoidCallback onTap;
+  final bool loading;
 
   @override
   Widget build(BuildContext context) {
@@ -184,16 +244,32 @@ final class _ActionButton extends StatelessWidget {
       borderRadius: BorderRadius.circular(4),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: onTap,
+        onTap: loading ? null : onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 13),
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              if (icon != null) ...[Icon(icon, size: 20, color: Colors.white), const SizedBox(width: 8)],
+              if (loading) ...[
+                const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(
+                      strokeWidth: 2, color: Colors.white),
+                ),
+                const SizedBox(width: 8),
+              ],
+              if (icon != null) ...[
+                Icon(icon, size: 20, color: Colors.white),
+                const SizedBox(width: 8)
+              ],
               Text(
                 label.toUpperCase(),
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, letterSpacing: 0.6, color: Colors.white),
+                style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: 0.6,
+                    color: Colors.white),
               ),
             ],
           ),

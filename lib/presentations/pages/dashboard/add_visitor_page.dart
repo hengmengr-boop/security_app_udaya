@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:udaya_visitor/data/data_export.dart';
 import 'package:udaya_visitor/helper/helper_export.dart';
+import 'package:udaya_visitor/logic/logic_export.dart';
 
 /// Add visitor form matching the supplied mobile Figma screen.
 final class AddVisitorPage extends StatefulWidget {
@@ -52,8 +54,10 @@ final class _AddVisitorPageState extends State<AddVisitorPage> {
   }
 
   Future<void> _save() async {
-    final roomName = _selectedRoom ?? (_member.text.trim().isEmpty ? null : _member.text.trim());
+    final roomName = _selectedRoom;
     if (_name.text.trim().isEmpty ||
+        _gender == null ||
+        (int.tryParse(_member.text.trim()) ?? 1) < 1 ||
         roomName == null ||
         _purpose.text.trim().isEmpty ||
         _date == null ||
@@ -74,8 +78,13 @@ final class _AddVisitorPageState extends State<AddVisitorPage> {
       endTime: end,
       room: roomName,
       purpose: _purpose.text.trim(),
+      phone: _phone.text.trim().isNotEmpty ? _phone.text.trim() : null,
+      gender: _gender == 'Female' ? 2 : 1,
+      member: int.tryParse(_member.text.trim()) ?? 1,
+      licensePlate:
+          _license.text.trim().isNotEmpty ? _license.text.trim() : null,
     );
-    await AppPreference.saveVisitors([...AppPreference.getVisitors, visitor]);
+    context.read<VisitorActionBloc>().add(AddVisitorActionEvent(visitor));
     if (mounted) Navigator.of(context).pop();
   }
 
@@ -171,7 +180,7 @@ final class _AddVisitorPageState extends State<AddVisitorPage> {
           _label('Gender', true),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
-              value: _gender,
+              initialValue: _gender,
               hint: const Text('Select'),
               decoration: _decoration(),
               items: const [
@@ -188,7 +197,7 @@ final class _AddVisitorPageState extends State<AddVisitorPage> {
           _label('Meeting Room', true),
           const SizedBox(height: 8),
           DropdownButtonFormField<String>(
-              value: _selectedRoom,
+              initialValue: _selectedRoom,
               isExpanded: true,
               hint: const Text('Select Meeting Room'),
               decoration: _decoration(),

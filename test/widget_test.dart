@@ -11,7 +11,8 @@ void main() {
       room: 'A',
       purpose: 'Meeting',
     );
-    final decoded = VisitorModel.decodeList(VisitorModel.encodeList([visitor])).single;
+    final decoded =
+        VisitorModel.decodeList(VisitorModel.encodeList([visitor])).single;
     expect(decoded.name, 'Jonathan Simmons');
     expect(decoded.initials, 'JS');
     expect(decoded.status, VisitorStatus.upcoming);

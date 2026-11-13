@@ -26,7 +26,8 @@ flutter run                 # connected phone / emulator
 
 Windows desktop needs **Developer Mode** on (Settings > For developers) for plugin symlinks.
 
-Demo login: `admin` / `123456` (see `C.demoUsername` / `C.demoPassword`).
+API login: use the account provided by the company API administrator. Login also requires
+the account's Google Authenticator code.
 
 ## Architecture (same as Flutter-Architecture)
 
@@ -48,5 +49,6 @@ Responsive: `context.isMobile` (<600) / `isTablet` / `isWide` (>=900) in
 
 ## Going online
 
-Data is local-first (demo visitors are seeded on first launch). To use a real API, change
-only the bodies of `AuthRepo.login` and `VisitorRepo.getVisitors / checkIn / checkOut` to call Dio.
+Authentication and visitor records use the configured company API. The app does not seed
+or cache demo visitor records locally. App settings and authentication tokens remain in
+local preferences and secure storage.

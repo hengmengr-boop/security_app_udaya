@@ -19,7 +19,9 @@ final class AppPreference {
   static const _keyVisitors = 'visitors';
 
   // * Ensure Initialized
-  static Future<void> ensureInitialized() async => _preferences = await SharedPreferences.getInstance();
+  static Future<void> ensureInitialized() async {
+    _preferences = await SharedPreferences.getInstance();
+  }
 
   // ── Auth ──────────────────────────────────────────────────────────────────
 
@@ -37,7 +39,8 @@ final class AppPreference {
 
   static String? get getAccessToken => _preferences.getString(_keyAccessToken);
 
-  static String? get getRefreshToken => _preferences.getString(_keyRefreshToken);
+  static String? get getRefreshToken =>
+      _preferences.getString(_keyRefreshToken);
 
   static String? get getUsername => _preferences.getString(_keyUsername);
 
@@ -52,7 +55,8 @@ final class AppPreference {
   }
 
   static ThemeMode get getTheme {
-    return ThemeMode.values[_preferences.getInt(_keyTheme) ?? ThemeMode.light.index];
+    return ThemeMode
+        .values[_preferences.getInt(_keyTheme) ?? ThemeMode.light.index];
   }
 
   static Color get getPrimaryColor {
@@ -66,10 +70,12 @@ final class AppPreference {
   static bool get hasVisitors => _preferences.containsKey(_keyVisitors);
 
   static Future<void> saveVisitors(List<VisitorModel> visitors) async {
-    await _preferences.setString(_keyVisitors, VisitorModel.encodeList(visitors));
+    await _preferences.setString(
+        _keyVisitors, VisitorModel.encodeList(visitors));
   }
 
-  static List<VisitorModel> get getVisitors => VisitorModel.decodeList(_preferences.getString(_keyVisitors));
+  static List<VisitorModel> get getVisitors =>
+      VisitorModel.decodeList(_preferences.getString(_keyVisitors));
 
   // ── Operation ─────────────────────────────────────────────────────────────
 

@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 
 /// Delays [run] until the user stops typing for [delay].
 final class Debouncer {
-  Debouncer({this.delay = const Duration(milliseconds: 350)});
+  Debouncer({this.delay = const Duration(milliseconds: 400)});
 
   final Duration delay;
   Timer? _timer;

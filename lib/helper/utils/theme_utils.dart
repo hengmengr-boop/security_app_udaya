@@ -11,7 +11,8 @@ final class ThemeUtils {
 
   /// Notifier for the current theme mode (light/dark)
   static final _themeMode = ValueNotifier<ThemeMode>(AppPreference.getTheme);
-  static final _primaryColor = ValueNotifier<Color>(AppPreference.getPrimaryColor);
+  static final _primaryColor =
+      ValueNotifier<Color>(AppPreference.getPrimaryColor);
   static final _isDarkNotifier = ValueNotifier<bool>(false);
 
   /// Getter for the current state
@@ -43,7 +44,8 @@ final class ThemeUtils {
   void _onThemeChanged(ThemeMode themeMode) {
     // * [_isDarkNotifier] - If is system check from the [platformBrightness]
     if (themeMode == ThemeMode.system) {
-      final brightness = SchedulerBinding.instance.platformDispatcher.platformBrightness;
+      final brightness =
+          SchedulerBinding.instance.platformDispatcher.platformBrightness;
       _isDarkNotifier.value = brightness == Brightness.dark;
       // * [_isDarkNotifier] - If isn't system compare with the [ThemeMode.dark]
     } else {

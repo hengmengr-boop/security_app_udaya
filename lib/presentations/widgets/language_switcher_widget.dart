@@ -15,7 +15,8 @@ final class LanguageSwitcher extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isEnglish = context.locale.languageCode == LanguageManager.defaultLanguage.languageCode;
+    final isEnglish = context.locale.languageCode ==
+        LanguageManager.defaultLanguage.languageCode;
 
     Widget button(FlagType type, Locale locale, bool selected) {
       final flag = _FlagButton(
@@ -24,7 +25,9 @@ final class LanguageSwitcher extends StatelessWidget {
         height: height,
         onTap: () => context.setLocale(locale),
       );
-      return expand ? Expanded(child: flag) : SizedBox(width: height * 1.4, child: flag);
+      return expand
+          ? Expanded(child: flag)
+          : SizedBox(width: height * 1.4, child: flag);
     }
 
     return Row(
@@ -39,7 +42,11 @@ final class LanguageSwitcher extends StatelessWidget {
 }
 
 final class _FlagButton extends StatelessWidget {
-  const _FlagButton({required this.type, required this.selected, required this.height, required this.onTap});
+  const _FlagButton(
+      {required this.type,
+      required this.selected,
+      required this.height,
+      required this.onTap});
 
   final FlagType type;
   final bool selected;
@@ -53,12 +60,15 @@ final class _FlagButton extends StatelessWidget {
       elevation: selected ? 2 : 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: selected ? AppColors.periwinkle : AppColors.border),
+        side: BorderSide(
+            color: selected ? AppColors.periwinkle : AppColors.border),
       ),
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: SizedBox(height: height, child: Center(child: FlagIcon(type: type, size: height * 0.6))),
+        child: SizedBox(
+            height: height,
+            child: Center(child: FlagIcon(type: type, size: height * 0.6))),
       ),
     );
   }

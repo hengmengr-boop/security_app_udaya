@@ -18,12 +18,14 @@ Future<VisitorFilter?> showFilterBottomSheet(
     shape: modalBottomSheetShape,
     backgroundColor: Colors.white,
     constraints: const BoxConstraints(maxWidth: 520),
-    builder: (_) => _FilterSheet(rooms: rooms, room: room, todayOnly: todayOnly),
+    builder: (_) =>
+        _FilterSheet(rooms: rooms, room: room, todayOnly: todayOnly),
   );
 }
 
 final class _FilterSheet extends StatefulWidget {
-  const _FilterSheet({required this.rooms, required this.room, required this.todayOnly});
+  const _FilterSheet(
+      {required this.rooms, required this.room, required this.todayOnly});
 
   final List<String> rooms;
   final String? room;
@@ -37,14 +39,19 @@ final class _FilterSheetState extends State<_FilterSheet> with ModalUtilsMixin {
   late String? _room = widget.room;
   late bool _todayOnly = widget.todayOnly;
 
-  Widget _chip({required String label, required bool selected, required VoidCallback onTap}) {
+  Widget _chip(
+      {required String label,
+      required bool selected,
+      required VoidCallback onTap}) {
     return ChoiceChip(
       label: Text(label),
       selected: selected,
       showCheckmark: false,
       selectedColor: AppColors.primary,
       backgroundColor: const Color(0xFFF4F5FA),
-      labelStyle: TextStyle(color: selected ? Colors.white : AppColors.textBody, fontWeight: FontWeight.w600),
+      labelStyle: TextStyle(
+          color: selected ? Colors.white : AppColors.textBody,
+          fontWeight: FontWeight.w600),
       onSelected: (_) => onTap(),
     );
   }
@@ -58,15 +65,22 @@ final class _FilterSheetState extends State<_FilterSheet> with ModalUtilsMixin {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(tr(LocaleKeys.filter), style: CustomTextStyle.largeTitleTextStyle(color: AppColors.textBody)),
+            Text(tr(LocaleKeys.filter),
+                style: CustomTextStyle.largeTitleTextStyle(
+                    color: AppColors.textBody)),
             const SizedBox(height: Dimen.defaultSpace),
-            Text(tr(LocaleKeys.filter_room), style: CustomTextStyle.bodyTextStyle(bold: true, color: AppColors.textSub)),
+            Text(tr(LocaleKeys.filter_room),
+                style: CustomTextStyle.bodyTextStyle(
+                    bold: true, color: AppColors.textSub)),
             const SizedBox(height: Dimen.smallSpace),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                _chip(label: tr(LocaleKeys.filter_all), selected: _room == null, onTap: () => setState(() => _room = null)),
+                _chip(
+                    label: tr(LocaleKeys.filter_all),
+                    selected: _room == null,
+                    onTap: () => setState(() => _room = null)),
                 for (final r in widget.rooms)
                   _chip(
                     label: '${tr(LocaleKeys.room)} $r',
@@ -76,7 +90,9 @@ final class _FilterSheetState extends State<_FilterSheet> with ModalUtilsMixin {
               ],
             ),
             const SizedBox(height: Dimen.defaultSpace),
-            Text(tr(LocaleKeys.filter_date), style: CustomTextStyle.bodyTextStyle(bold: true, color: AppColors.textSub)),
+            Text(tr(LocaleKeys.filter_date),
+                style: CustomTextStyle.bodyTextStyle(
+                    bold: true, color: AppColors.textSub)),
             const SizedBox(height: Dimen.smallSpace),
             Wrap(
               spacing: 8,
@@ -109,8 +125,11 @@ final class _FilterSheetState extends State<_FilterSheet> with ModalUtilsMixin {
                 const SizedBox(width: 12),
                 Expanded(
                   child: FilledButton(
-                    onPressed: () => dismiss(context: context, result: (room: _room, todayOnly: _todayOnly)),
-                    style: FilledButton.styleFrom(backgroundColor: AppColors.primary),
+                    onPressed: () => dismiss(
+                        context: context,
+                        result: (room: _room, todayOnly: _todayOnly)),
+                    style: FilledButton.styleFrom(
+                        backgroundColor: AppColors.primary),
                     child: Text(tr(LocaleKeys.filter_apply)),
                   ),
                 ),

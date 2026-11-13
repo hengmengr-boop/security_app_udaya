@@ -33,5 +33,19 @@
   "filter_reset": "Reset",
   "filter_apply": "Apply",
   "msg_checked_in": "{name} has checked in",
-  "msg_checked_out": "{name} has checked out"
+  "msg_checked_out": "{name} has checked out",
+  "error_network": "Network connection error. Please try again.",
+  "error_timeout": "Connection timeout. Please try again.",
+  "error_unauthorized": "Unauthorized access. Please log in again.",
+  "error_server": "Server error occurred. Please try again later.",
+  "retry": "Retry",
+  "badge_total": "Total",
+  "public_checkin": "Public Check-In",
+  "verify_pin": "Verify PIN",
+  "enter_pin": "Enter PIN",
+  "pin_invalid": "Invalid PIN code",
+  "report_title": "Visitor Report",
+  "export_report": "Export Report",
+  "facility_linked": "Facility linked successfully",
+  "loading": "Loading..."
 }

@@ -29,16 +29,17 @@ final class _AppTextFieldState extends State<AppTextField> {
   late bool _obscure = widget.isPassword;
 
   OutlineInputBorder _border(Color color) => OutlineInputBorder(
-    borderRadius: BorderRadius.circular(10),
-    borderSide: BorderSide(color: color),
-  );
+        borderRadius: BorderRadius.circular(10),
+        borderSide: BorderSide(color: color),
+      );
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: CustomTextStyle.bodyTextStyle(color: AppColors.textSub)),
+        Text(widget.label,
+            style: CustomTextStyle.bodyTextStyle(color: AppColors.textSub)),
         const SizedBox(height: Dimen.smallSpace),
         TextField(
           controller: widget.controller,
@@ -54,13 +55,16 @@ final class _AppTextFieldState extends State<AppTextField> {
             hintStyle: const TextStyle(color: Color(0xFFB0B3C6)),
             filled: true,
             fillColor: Colors.white,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
             border: _border(AppColors.border),
             enabledBorder: _border(AppColors.border),
             focusedBorder: _border(AppColors.primary),
             suffixIcon: widget.isPassword
                 ? IconButton(
-                    icon: Icon(_obscure ? Icons.visibility_off_outlined : Icons.visibility_outlined),
+                    icon: Icon(_obscure
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined),
                     color: AppColors.textMuted,
                     onPressed: () => setState(() => _obscure = !_obscure),
                   )

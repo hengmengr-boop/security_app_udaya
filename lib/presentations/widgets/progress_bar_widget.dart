@@ -14,7 +14,8 @@ final class ProgressBar extends StatelessWidget {
       child: Stack(
         children: [
           // * Empty Progress Indicator
-          CircularProgressIndicator(value: 100, color: Colors.white, backgroundColor: color),
+          CircularProgressIndicator(
+              value: 100, color: Colors.white, backgroundColor: color),
           // * Progress Indicator
           CircularProgressIndicator(backgroundColor: color),
         ],

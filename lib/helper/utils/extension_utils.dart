@@ -22,5 +22,6 @@ extension DateTimeExtensionUtils on DateTime {
   /// ISO format 'yyyy-MM-dd'
   String get yMd => DateFormat('yyyy-MM-dd', locale).format(this);
 
-  bool isSameDayAs(DateTime other) => year == other.year && month == other.month && day == other.day;
+  bool isSameDayAs(DateTime other) =>
+      year == other.year && month == other.month && day == other.day;
 }

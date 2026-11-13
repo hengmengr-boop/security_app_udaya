@@ -37,13 +37,18 @@ final class UdayaLogo extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'UDΛYΛ',
-                      style: TextStyle(color: Colors.white, fontSize: 56, fontWeight: FontWeight.w900, height: 1),
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 56,
+                          fontWeight: FontWeight.w900,
+                          height: 1),
                     ),
                   ),
                 ),
               ),
               // * Red slash
-              const Positioned.fill(child: CustomPaint(painter: _SlashPainter())),
+              const Positioned.fill(
+                  child: CustomPaint(painter: _SlashPainter())),
               // * Sub title
               const Positioned(
                 left: 6,

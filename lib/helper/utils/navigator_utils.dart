@@ -32,7 +32,9 @@ extension NavigatorUtils on BuildContext {
     }
 
     return Navigator.of(ctx, rootNavigator: rootNavigator).push<T>(
-      popUp ? CupertinoModalPopupRoute<T>(builder: (_) => destination) : CupertinoPageRoute<T>(builder: (_) => destination),
+      popUp
+          ? CupertinoModalPopupRoute<T>(builder: (_) => destination)
+          : CupertinoPageRoute<T>(builder: (_) => destination),
     );
   }
 
@@ -56,11 +58,16 @@ extension NavigatorUtils on BuildContext {
     }
 
     return Navigator.of(ctx, rootNavigator: rootNavigator).pushReplacement(
-      popUp ? CupertinoModalPopupRoute<T>(builder: (_) => destination) : CupertinoPageRoute<T>(builder: (_) => destination),
+      popUp
+          ? CupertinoModalPopupRoute<T>(builder: (_) => destination)
+          : CupertinoPageRoute<T>(builder: (_) => destination),
     );
   }
 
-  Future<void> go({BuildContext? context, required Widget destination, bool rootNavigator = false}) {
+  Future<void> go(
+      {BuildContext? context,
+      required Widget destination,
+      bool rootNavigator = false}) {
     final ctx = context ?? this;
     final path = _getRoutePath(destination);
     if (path != null) {
@@ -70,7 +77,8 @@ extension NavigatorUtils on BuildContext {
     return Navigator.of(
       ctx,
       rootNavigator: rootNavigator,
-    ).pushAndRemoveUntil(CupertinoPageRoute(builder: (_) => destination), (route) => false);
+    ).pushAndRemoveUntil(
+        CupertinoPageRoute(builder: (_) => destination), (route) => false);
   }
 
   bool canPop({BuildContext? context, bool rootNavigator = false}) {
@@ -103,10 +111,13 @@ extension NavigatorUtils on BuildContext {
         title: Text(title),
         content: Text(message),
         actions: [
-          TextButton(onPressed: () => Navigator.of(context).pop(false), child: Text(cancelText)),
+          TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(cancelText)),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: isDestructive ? Colors.red : null),
+            style: TextButton.styleFrom(
+                foregroundColor: isDestructive ? Colors.red : null),
             child: Text(confirmText),
           ),
         ],

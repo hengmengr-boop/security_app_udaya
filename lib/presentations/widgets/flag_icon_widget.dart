@@ -16,7 +16,10 @@ final class FlagIcon extends StatelessWidget {
       child: SizedBox(
         width: size,
         height: size,
-        child: CustomPaint(painter: type == FlagType.uk ? const _UkFlagPainter() : const _CambodiaFlagPainter()),
+        child: CustomPaint(
+            painter: type == FlagType.uk
+                ? const _UkFlagPainter()
+                : const _CambodiaFlagPainter()),
       ),
     );
   }
@@ -65,13 +68,17 @@ final class _CambodiaFlagPainter extends CustomPainter {
     const red = Color(0xFFE00025);
 
     canvas.drawRect(Rect.fromLTWH(0, 0, w, h * 0.25), Paint()..color = blue);
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.25, w, h * 0.5), Paint()..color = red);
-    canvas.drawRect(Rect.fromLTWH(0, h * 0.75, w, h * 0.25), Paint()..color = blue);
+    canvas.drawRect(
+        Rect.fromLTWH(0, h * 0.25, w, h * 0.5), Paint()..color = red);
+    canvas.drawRect(
+        Rect.fromLTWH(0, h * 0.75, w, h * 0.25), Paint()..color = blue);
 
     // * Simplified Angkor Wat
     final white = Paint()..color = Colors.white;
-    canvas.drawRect(Rect.fromLTRB(w * 0.26, h * 0.64, w * 0.74, h * 0.69), white);
-    canvas.drawRect(Rect.fromLTRB(w * 0.33, h * 0.52, w * 0.67, h * 0.64), white);
+    canvas.drawRect(
+        Rect.fromLTRB(w * 0.26, h * 0.64, w * 0.74, h * 0.69), white);
+    canvas.drawRect(
+        Rect.fromLTRB(w * 0.33, h * 0.52, w * 0.67, h * 0.64), white);
     void tower(double cx, double top, double width) {
       final path = Path()
         ..moveTo(cx - width / 2, h * 0.52)

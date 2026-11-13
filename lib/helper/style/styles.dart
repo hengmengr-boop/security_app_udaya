@@ -41,15 +41,20 @@ const modalBottomSheetShape = RoundedRectangleBorder(
     topRight: Radius.circular(Dimen.defaultRadius * 2),
   ),
 );
-const modalDialogShape = RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(Dimen.defaultRadius / 2)));
+const modalDialogShape = RoundedRectangleBorder(
+    borderRadius: BorderRadius.all(Radius.circular(Dimen.defaultRadius / 2)));
 
 class CustomTextStyle {
   CustomTextStyle._();
 
-  static final ValueNotifier<Color> _titleColor = ValueNotifier(AppColors.chromeHi);
-  static final ValueNotifier<Color> _bodyColor = ValueNotifier(AppColors.textBodyDark);
-  static final ValueNotifier<Color> _subColor = ValueNotifier(AppColors.textSubDark);
-  static final ValueNotifier<Color> _muteColor = ValueNotifier(AppColors.textSubDark);
+  static final ValueNotifier<Color> _titleColor =
+      ValueNotifier(AppColors.chromeHi);
+  static final ValueNotifier<Color> _bodyColor =
+      ValueNotifier(AppColors.textBodyDark);
+  static final ValueNotifier<Color> _subColor =
+      ValueNotifier(AppColors.textSubDark);
+  static final ValueNotifier<Color> _muteColor =
+      ValueNotifier(AppColors.textSubDark);
 
   static final CustomTextStyle _instance = CustomTextStyle._();
 
