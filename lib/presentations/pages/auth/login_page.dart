@@ -79,10 +79,17 @@ final class _LoginPageState extends State<LoginPage> {
     return BlocConsumer<AuthBloc, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          router.refresh();
-          context.go(destination: const VisitorPage());
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              router.go('/visitors');
+            }
+          });
         } else if (state is AuthenticatorRequired) {
-          _requestAuthenticatorCode(context, state);
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              _requestAuthenticatorCode(context, state);
+            }
+          });
         } else if (state is AuthFailure) {
           context.showSuccessSnackBar(msg: state.message, isError: true);
         }

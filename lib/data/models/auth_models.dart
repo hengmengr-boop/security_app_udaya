@@ -44,11 +44,13 @@ final class AuthLoginResponse extends Equatable {
 
   factory AuthLoginResponse.fromJson(Map<String, dynamic> json) {
     final body = json['body'] as Map<String, dynamic>? ?? json;
+    final header = json['header'] as Map<String, dynamic>?;
+    final token = (body['message'] ?? body['loginVerifyToken'] ?? '').toString();
+    final isSuccess = (body['status'] as bool?) ?? (header?['result'] as bool?) ?? token.isNotEmpty;
     return AuthLoginResponse(
-      status: (body['status'] ?? false) as bool,
-      loginVerifyToken:
-          (body['message'] ?? body['loginVerifyToken'] ?? '').toString(),
-      userId: body['id'] as int?,
+      status: isSuccess,
+      loginVerifyToken: token,
+      userId: (body['id'] ?? body['userId']) as int?,
       countLogin: body['countLogin'] as int?,
     );
   }
@@ -76,7 +78,7 @@ final class AuthValidate2FaRequest extends Equatable {
       };
 }
 
-/// Token data returned in `body.data[0]`
+/// Token data returned in `body` or `body.data[0]`
 final class AuthTokenData extends Equatable {
   const AuthTokenData({
     required this.loginVerifyToken,
@@ -142,21 +144,24 @@ final class AuthValidate2FaResponse extends Equatable {
 
   factory AuthValidate2FaResponse.fromJson(Map<String, dynamic> json) {
     final body = json['body'] as Map<String, dynamic>? ?? json;
+    final header = json['header'] as Map<String, dynamic>?;
     final rawData = body['data'];
-    final dataList = rawData is List ? rawData : null;
     AuthTokenData? token;
-    if (dataList != null && dataList.isNotEmpty) {
-      final first = dataList.first;
-      if (first is Map) {
-        token = AuthTokenData.fromJson(Map<String, dynamic>.from(first));
-      }
+
+    if (rawData is List && rawData.isNotEmpty && rawData.first is Map) {
+      token = AuthTokenData.fromJson(Map<String, dynamic>.from(rawData.first));
     } else if (rawData is Map) {
       token = AuthTokenData.fromJson(Map<String, dynamic>.from(rawData));
+    } else if (body.containsKey('accessToken')) {
+      token = AuthTokenData.fromJson(body);
     }
 
+    final hasToken = token != null && token.accessToken.isNotEmpty;
+    final isSuccess = (body['status'] as bool?) ?? (header?['result'] as bool?) ?? hasToken;
+
     return AuthValidate2FaResponse(
-      status: (body['status'] ?? false) as bool,
-      message: (body['message'] ?? '').toString(),
+      status: isSuccess,
+      message: (body['message'] ?? (hasToken ? 'Success' : '')).toString(),
       tokenData: token,
     );
   }

@@ -31,12 +31,17 @@ Future<void> main(List<String> args) async {
     );
   }
 
-  ApiClient.shared.onUnauthorized = () => router.go('/login');
+  // Safe redirect on 401 unauthorized
+  ApiClient.shared.onUnauthorized = () {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      router.go('/login');
+    });
+  };
 
   // * Run App
   runApp(
     DevicePreview(
-      enabled: kDebugMode,
+      enabled: kIsWeb && kDebugMode,
       builder: (_) => EasyLocalization(
         path: Assets.translationPath,
         supportedLocales: LanguageManager.supportedLanguage,
@@ -78,20 +83,17 @@ class _AppProviders extends StatelessWidget {
             create: (ctx) =>
                 ReportBloc(repository: ctx.read<VisitorRepository>()),
           ),
-        ],
-        child: BlocProvider<VisitorActionBloc>(
-          create: (ctx) => VisitorActionBloc(
-            repository: ctx.read<VisitorRepository>(),
-            listBloc: ctx.read<VisitorListBloc>(),
-            badgeBloc: ctx.read<VisitorBadgeBloc>(),
+          BlocProvider(
+            create: (ctx) =>
+                VisitorActionBloc(repository: ctx.read<VisitorRepository>()),
           ),
-          child: ValueListenableBuilder<ThemeMode>(
-            valueListenable: ThemeUtils.themeModeNotifier,
-            builder: (context, mode, child) => ValueListenableBuilder<Color>(
-              valueListenable: ThemeUtils.primaryColorNotifier,
-              builder: (context, color, child) =>
-                  _MyApp(mode: mode, primaryColor: color),
-            ),
+        ],
+        child: ValueListenableBuilder<ThemeMode>(
+          valueListenable: ThemeUtils.themeModeNotifier,
+          builder: (context, mode, child) => ValueListenableBuilder<Color>(
+            valueListenable: ThemeUtils.primaryColorNotifier,
+            builder: (context, color, child) =>
+                _MyApp(mode: mode, primaryColor: color),
           ),
         ),
       ),
@@ -115,7 +117,9 @@ class _MyApp extends StatelessWidget {
       darkTheme: AppTheme.darkTheme(primaryColor),
       routerConfig: router,
       locale: context.locale,
-      builder: DevicePreview.appBuilder,
+      builder: kIsWeb && kDebugMode
+          ? DevicePreview.appBuilder
+          : (context, child) => child ?? const SizedBox.shrink(),
       supportedLocales: context.supportedLocales,
       scaffoldMessengerKey: scaffoldMessengerKey,
       localizationsDelegates: context.localizationDelegates,
