@@ -42,13 +42,8 @@ lib/
 ├── logic/bloc/      AuthBloc · VisitorBloc
 └── presentations/   items/ItemVisitor · modals (QR dialog, filter sheet)
                      pages/auth/LoginPage · pages/dashboard/VisitorPage · widgets
-```
+
 
 Responsive: `context.isMobile` (<600) / `isTablet` / `isWide` (>=900) in
 `helper/utils/responsive_utils.dart`. Wide = sidebar + list, narrow = stacked.
 
-## Going online
-
-Authentication and visitor records use the configured company API. The app does not seed
-or cache demo visitor records locally. App settings and authentication tokens remain in
-local preferences and secure storage.
